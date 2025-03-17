@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Music App</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Barra de navegación -->
+    <nav>
+        <div class="logo">MusicApp</div>
+        <div class="search-bar">
+            <input type="text" id="searchInput" placeholder="Buscar artistas...">
+            <button onclick="searchArtist()">Buscar</button>
+        </div>
+    </nav>
+
+    <!-- Vista principal -->
+    <div id="mainView" class="container">
+        <h1>Artistas Destacados</h1>
+        <div id="artistsGrid" class="grid"></div>
+    </div>
+
+    <!-- Vista detalle artista -->
+    <div id="artistDetail" class="container hidden">
+        <button onclick="goBack()">Volver</button>
+        <div id="artistInfo"></div>
+        <h2>Álbumes</h2>
+        <div id="albumsGrid" class="grid"></div>
+    </div>
+
+    <!-- Vista detalle álbum -->
+    <div id="albumDetail" class="container hidden">
+        <button onclick="goBack()">Volver</button>
+        <div id="albumInfo"></div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
