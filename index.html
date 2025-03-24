@@ -9,10 +9,15 @@
 <body>
     <header>
         <h1>Explora Artistas</h1>
+        <input type="text" id="search" placeholder="Buscar artista o álbum...">
+        <button id="search-btn">Buscar</button>
     </header>
     <main>
-        <section id="artist-profile"></section>
-        <section id="albums"></section>
+        <section id="artist-list"></section>
+        <section id="artist-profile" class="hidden"></section>
+        <section id="albums" class="hidden"></section>
+        <section id="tracks" class="hidden"></section>
+        <button id="back-btn" class="hidden">Regresar</button>
     </main>
     <script src="script.js"></script>
 </body>
