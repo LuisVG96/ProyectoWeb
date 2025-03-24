@@ -29,7 +29,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             headers: { "Authorization": `Bearer ${token}` },
         });
         const data = await response.json();
-        return data.artists.items[0]; 
+        return data.artists.items.length > 0 ? data.artists.items[0] : null;
     }
 
     async function getAlbums(artistId) {
@@ -53,12 +53,15 @@ document.addEventListener("DOMContentLoaded", async () => {
         const artists = ["Linkin Park", "Sabrina Carpenter", "The Weeknd"];
         for (let artistName of artists) {
             const artist = await getArtistInfo(artistName);
-            artistList.innerHTML += `
-                <div onclick="displayArtist('${artistName}')">
+            if (artist) {
+                const div = document.createElement("div");
+                div.innerHTML = `
                     <h2>${artist.name}</h2>
                     <img src="${artist.images.length ? artist.images[0].url : ''}" width="200">
-                </div>
-            `;
+                `;
+                div.addEventListener("click", () => displayArtist(artist.name));
+                artistList.appendChild(div);
+            }
         }
     }
 
@@ -66,7 +69,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         const artist = await getArtistInfo(artistName);
         if (!artist) {
             artistProfile.innerHTML = `<h2>No se encontró el artista</h2>`;
-            albumsSection.innerHTML = "";
             return;
         }
 
@@ -83,14 +85,15 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         const albums = await getAlbums(artist.id);
         albumsSection.innerHTML = albums.map(album => `
-            <div onclick="displayTracks('${album.id}')">
+            <div>
                 <h3>${album.name}</h3>
                 <img src="${album.images.length ? album.images[0].url : ''}" width="150">
+                <button onclick="displayTracks('${album.id}', '${artist.id}')">Ver Canciones</button>
             </div>
         `).join("");
     }
 
-    async function displayTracks(albumId) {
+    async function displayTracks(albumId, artistId) {
         const tracks = await getTracks(albumId);
         artistProfile.classList.add("hidden");
         albumsSection.classList.add("hidden");
@@ -101,12 +104,25 @@ document.addEventListener("DOMContentLoaded", async () => {
             <ul>
                 ${tracks.map(track => `<li>${track.name}</li>`).join("")}
             </ul>
+            <button onclick="displayArtistById('${artistId}')">Volver a álbumes</button>
         `;
+    }
+
+    async function displayArtistById(artistId) {
+        const artist = await getArtistInfo(artistId);
+        if (artist) {
+            displayArtist(artist.name);
+        }
     }
 
     searchBtn.addEventListener("click", async () => {
         if (!token) await getToken();
-        displayArtist(searchInput.value);
+        const query = searchInput.value.toLowerCase();
+        if (["linkin park", "sabrina carpenter", "the weeknd"].includes(query)) {
+            displayArtist(query);
+        } else {
+            artistProfile.innerHTML = "<h2>No se encontró el álbum</h2>";
+        }
     });
 
     backBtn.addEventListener("click", () => {
