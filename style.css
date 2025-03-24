@@ -11,17 +11,42 @@ body {
 header {
     background-color: #1DB954;
     padding: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+}
+
+input {
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+}
+
+button {
+    padding: 10px;
+    background-color: black;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
 }
 
 main {
     padding: 20px;
 }
 
-#artist-profile, #albums {
+#artist-list, #artist-profile, #albums, #tracks {
     margin-top: 20px;
+}
+
+.hidden {
+    display: none;
 }
 
 img {
     border-radius: 10px;
     margin-top: 10px;
+    cursor: pointer;
 }
+
