@@ -7,8 +7,8 @@ document.addEventListener("DOMContentLoaded", async () => {
     const searchInput = document.getElementById("search");
     const searchBtn = document.getElementById("search-btn");
 
-    const clientId = "TU_CLIENT_ID";
-    const clientSecret = "TU_CLIENT_SECRET";
+    const clientId = "f6967377460f424db33c6ae8e7183eb9";
+    const clientSecret = "9002aceb05a34a60b921409e7b8f4d7a";
     let token = "";
 
     async function getToken() {
