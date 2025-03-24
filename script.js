@@ -1,9 +1,14 @@
 document.addEventListener("DOMContentLoaded", async () => {
+    const artistList = document.getElementById("artist-list");
     const artistProfile = document.getElementById("artist-profile");
     const albumsSection = document.getElementById("albums");
+    const tracksSection = document.getElementById("tracks");
+    const backBtn = document.getElementById("back-btn");
+    const searchInput = document.getElementById("search");
+    const searchBtn = document.getElementById("search-btn");
 
-    const clientId = "f6967377460f424db33c6ae8e7183eb9";
-    const clientSecret = "9002aceb05a34a60b921409e7b8f4d7a";
+    const clientId = "TU_CLIENT_ID";
+    const clientSecret = "TU_CLIENT_SECRET";
     let token = "";
 
     async function getToken() {
@@ -35,6 +40,28 @@ document.addEventListener("DOMContentLoaded", async () => {
         return data.items;
     }
 
+    async function getTracks(albumId) {
+        const response = await fetch(`https://api.spotify.com/v1/albums/${albumId}/tracks`, {
+            headers: { "Authorization": `Bearer ${token}` },
+        });
+        const data = await response.json();
+        return data.items;
+    }
+
+    async function displayArtists() {
+        artistList.innerHTML = "";
+        const artists = ["Linkin Park", "Sabrina Carpenter", "The Weeknd"];
+        for (let artistName of artists) {
+            const artist = await getArtistInfo(artistName);
+            artistList.innerHTML += `
+                <div onclick="displayArtist('${artistName}')">
+                    <h2>${artist.name}</h2>
+                    <img src="${artist.images.length ? artist.images[0].url : ''}" width="200">
+                </div>
+            `;
+        }
+    }
+
     async function displayArtist(artistName) {
         const artist = await getArtistInfo(artistName);
         if (!artist) {
@@ -43,6 +70,12 @@ document.addEventListener("DOMContentLoaded", async () => {
             return;
         }
 
+        artistList.classList.add("hidden");
+        artistProfile.classList.remove("hidden");
+        albumsSection.classList.remove("hidden");
+        backBtn.classList.remove("hidden");
+        tracksSection.classList.add("hidden");
+
         artistProfile.innerHTML = `
             <h2>${artist.name}</h2>
             <img src="${artist.images.length ? artist.images[0].url : ''}" width="200">
@@ -50,17 +83,44 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         const albums = await getAlbums(artist.id);
         albumsSection.innerHTML = albums.map(album => `
-            <div>
+            <div onclick="displayTracks('${album.id}')">
                 <h3>${album.name}</h3>
                 <img src="${album.images.length ? album.images[0].url : ''}" width="150">
             </div>
         `).join("");
     }
 
-    await getToken();
+    async function displayTracks(albumId) {
+        const tracks = await getTracks(albumId);
+        artistProfile.classList.add("hidden");
+        albumsSection.classList.add("hidden");
+        tracksSection.classList.remove("hidden");
 
-    // Mostrar automáticamente los tres artistas solicitados
-    displayArtist("Linkin Park");
-    setTimeout(() => displayArtist("Sabrina Carpenter"), 3000);
-    setTimeout(() => displayArtist("The Weeknd"), 6000);
+        tracksSection.innerHTML = `
+            <h2>Canciones</h2>
+            <ul>
+                ${tracks.map(track => `<li>${track.name}</li>`).join("")}
+            </ul>
+        `;
+    }
+
+    searchBtn.addEventListener("click", async () => {
+        if (!token) await getToken();
+        displayArtist(searchInput.value);
+    });
+
+    backBtn.addEventListener("click", () => {
+        if (!albumsSection.classList.contains("hidden")) {
+            albumsSection.classList.add("hidden");
+            artistProfile.classList.add("hidden");
+            artistList.classList.remove("hidden");
+            backBtn.classList.add("hidden");
+        } else if (!tracksSection.classList.contains("hidden")) {
+            tracksSection.classList.add("hidden");
+            albumsSection.classList.remove("hidden");
+        }
+    });
+
+    await getToken();
+    displayArtists();
 });
