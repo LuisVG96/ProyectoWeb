@@ -1,7 +1,7 @@
 document.addEventListener("DOMContentLoaded", async () => {
     const elements = {
         artistList: document.getElementById("artist-list"),
-        albumDetail: document.getElementById("album-detail"),
+        artistDetail: document.getElementById("artist-detail"),
         tracksSection: document.getElementById("tracks"),
         backBtn: document.getElementById("back-btn"),
         searchInput: document.getElementById("search"),
@@ -80,49 +80,80 @@ document.addEventListener("DOMContentLoaded", async () => {
         for (const artistName of allowedArtists) {
             const artist = await getArtist(artistName);
             if (artist) {
-                const card = createCard(artist);
-                card.addEventListener("click", () => showArtist(artist));
+                const card = createArtistCard(artist);
+                card.addEventListener("click", () => showArtistDetail(artist));
                 elements.artistList.appendChild(card);
             }
         }
     }
 
-    // Mostrar artista
-    async function showArtist(artist) {
+    // Crear tarjeta de artista
+    function createArtistCard(artist) {
+        const div = document.createElement("div");
+        div.className = "artist-card";
+        div.innerHTML = `
+            <img src="${artist.images[0]?.url || 'placeholder.jpg'}">
+            <h3>${artist.name}</h3>
+        `;
+        return div;
+    }
+
+    // Mostrar detalle de artista
+    async function showArtistDetail(artist) {
         const albums = await getAlbums(artist.id);
         
         elements.artistList.classList.add("hidden");
-        elements.albumDetail.classList.remove("hidden");
+        elements.artistDetail.classList.remove("hidden");
         elements.backBtn.classList.remove("hidden");
         
-        elements.albumDetail.innerHTML = `
-            <h2 class="artist-name">${artist.name}</h2>
-            <div class="grid-view">
-                ${albums.map(album => createAlbumCard(album)).join("")}
+        elements.artistDetail.innerHTML = `
+            <div class="artist-header">
+                <div class="artist-info">
+                    <h1 class="artist-name">${artist.name}</h1>
+                    <p class="artist-description">${artist.name} es uno de los artistas más influyentes en la música moderna con millones de seguidores en todo el mundo.</p>
+                </div>
+                <div class="artist-stats">
+                    <div class="followers-percent">20%</div>
+                    <div class="followers-label">FOLLOWERS</div>
+                </div>
+            </div>
+            <div class="album-list">
+                ${albums.map(album => `
+                    <div class="album-item" data-album-id="${album.id}">
+                        <div class="album-meta">
+                            <h3>${album.name}</h3>
+                            <span class="album-year">${album.release_date.split('-')[0]}</span>
+                        </div>
+                    </div>
+                `).join('')}
             </div>
         `;
 
-        document.querySelectorAll(".album-card").forEach((card, index) => {
-            card.addEventListener("click", () => showAlbum(albums[index]));
+        document.querySelectorAll(".album-item").forEach(albumElement => {
+            albumElement.addEventListener("click", async (e) => {
+                const albumId = e.currentTarget.dataset.albumId;
+                const tracks = await getTracks(albumId);
+                showTracks(tracks, albumId);
+            });
         });
     }
 
-    // Mostrar álbum
-    async function showAlbum(album) {
-        const tracks = await getTracks(album.id);
+    // Mostrar lista de canciones
+    async function showTracks(tracks, albumId) {
+        const albumResponse = await fetch(`https://api.spotify.com/v1/albums/${albumId}`, {
+            headers: { "Authorization": `Bearer ${token}` }
+        });
+        const album = await albumResponse.json();
         
-        elements.albumDetail.classList.add("hidden");
+        elements.artistDetail.classList.add("hidden");
         elements.tracksSection.classList.remove("hidden");
         
         elements.tracksSection.innerHTML = `
-            <div class="album-header">
-                <img src="${album.images[0].url}" class="album-artwork">
-                <div class="album-info">
-                    <h1 class="album-title">${album.name}</h1>
-                    <p class="album-artist">${album.artists[0].name} • ${album.release_date.split("-")[0]}</p>
-                </div>
-            </div>
             <div class="track-list">
+                <div class="album-header">
+                    <h2>${album.name}</h2>
+                    <p>${album.artists[0].name} • ${album.release_date.split('-')[0]}</p>
+                </div>
                 ${tracks.map((track, index) => `
                     <div class="track-item">
                         <span class="track-number">${index + 1}</span>
@@ -131,33 +162,12 @@ document.addEventListener("DOMContentLoaded", async () => {
                         </div>
                         <span class="track-duration">${msToTime(track.duration_ms)}</span>
                     </div>
-                `).join("")}
+                `).join('')}
             </div>
         `;
     }
 
-    // Funciones auxiliares
-    function createCard(data) {
-        const div = document.createElement("div");
-        div.className = data.type === "artist" ? "artist-card" : "album-card";
-        div.innerHTML = `
-            <img src="${data.images[0]?.url || 'placeholder.jpg'}">
-            <h3>${data.name}</h3>
-            <p>${data.type === "album" ? data.artists[0].name : "Artista"}</p>
-        `;
-        return div;
-    }
-
-    function createAlbumCard(album) {
-        return `
-            <div class="album-card">
-                <img src="${album.images[0]?.url || 'placeholder.jpg'}">
-                <h3>${album.name}</h3>
-                <p>${album.artists[0].name}</p>
-            </div>
-        `;
-    }
-
+    // Convertir milisegundos a tiempo
     function msToTime(ms) {
         const minutes = Math.floor(ms / 60000);
         const seconds = ((ms % 60000) / 1000).toFixed(0);
@@ -170,9 +180,9 @@ document.addEventListener("DOMContentLoaded", async () => {
         const results = await search(elements.searchInput.value);
         
         if (results.artists.length > 0) {
-            showArtist(results.artists[0]);
+            showArtistDetail(results.artists[0]);
         } else if (results.albums.length > 0) {
-            showAlbum(results.albums[0]);
+            showTracks(await getTracks(results.albums[0].id), results.albums[0].id);
         } else {
             alert("No se encontraron resultados válidos");
         }
@@ -181,10 +191,10 @@ document.addEventListener("DOMContentLoaded", async () => {
     elements.backBtn.addEventListener("click", () => {
         if (!elements.tracksSection.classList.contains("hidden")) {
             elements.tracksSection.classList.add("hidden");
-            elements.albumDetail.classList.remove("hidden");
+            elements.artistDetail.classList.remove("hidden");
         } else {
             elements.artistList.classList.remove("hidden");
-            elements.albumDetail.classList.add("hidden");
+            elements.artistDetail.classList.add("hidden");
             elements.backBtn.classList.add("hidden");
         }
     });
