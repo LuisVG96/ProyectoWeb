@@ -3,22 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Aplicación de Música</title>
+    <title>Music App - Spotify Style</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <header>
-        <h1>Explora Artistas</h1>
-        <input type="text" id="search" placeholder="Buscar artista o álbum...">
-        <button id="search-btn">Buscar</button>
+        <h1>Explora Música</h1>
+        <div class="search-container">
+            <input type="text" id="search" placeholder="Buscar artista o álbum...">
+            <button id="search-btn">Buscar</button>
+        </div>
     </header>
+    
     <main>
-        <section id="artist-list"></section>
+        <section id="artist-list" class="grid-view"></section>
         <section id="artist-profile" class="hidden"></section>
-        <section id="albums" class="hidden"></section>
+        <section id="album-detail" class="hidden"></section>
         <section id="tracks" class="hidden"></section>
-        <button id="back-btn" class="hidden">Regresar</button>
+        <button id="back-btn" class="hidden back-button">← Volver</button>
     </main>
+
     <script src="script.js"></script>
 </body>
 </html>
