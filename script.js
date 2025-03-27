@@ -13,7 +13,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const allowedArtists = ["the weeknd", "linkin park", "sabrina carpenter"];
     let token = "";
 
-    // Autenticación con Spotify
+    // Autenticación
     async function getToken() {
         const response = await fetch("https://accounts.spotify.com/api/token", {
             method: "POST",
@@ -27,7 +27,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         token = data.access_token;
     }
 
-    // Búsqueda controlada
+    // Búsqueda
     async function search(query) {
         const response = await fetch(
             `https://api.spotify.com/v1/search?q=${encodeURIComponent(query)}&type=artist,album`,
@@ -45,7 +45,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         };
     }
 
-    // Obtener artista por nombre
+    // Obtener artista
     async function getArtist(artistName) {
         const response = await fetch(
             `https://api.spotify.com/v1/search?q=${encodeURIComponent(artistName)}&type=artist`,
@@ -55,7 +55,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         return data.artists.items[0];
     }
 
-    // Obtener álbumes de artista
+    // Obtener álbumes
     async function getAlbums(artistId) {
         const response = await fetch(`https://api.spotify.com/v1/artists/${artistId}/albums`, {
             headers: { "Authorization": `Bearer ${token}` }
@@ -64,7 +64,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         return data.items;
     }
 
-    // Obtener canciones de álbum
+    // Obtener canciones
     async function getTracks(albumId) {
         const response = await fetch(`https://api.spotify.com/v1/albums/${albumId}/tracks`, {
             headers: { "Authorization": `Bearer ${token}` }
@@ -92,7 +92,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         const div = document.createElement("div");
         div.className = "artist-card";
         div.innerHTML = `
-            <img src="${artist.images[0]?.url || 'placeholder.jpg'}">
+            <img src="${artist.images[0]?.url}">
             <h3>${artist.name}</h3>
         `;
         return div;
@@ -110,10 +110,10 @@ document.addEventListener("DOMContentLoaded", async () => {
             <div class="artist-header">
                 <div class="artist-info">
                     <h1 class="artist-name">${artist.name}</h1>
-                    <p class="artist-description">${artist.name} es uno de los artistas más influyentes en la música moderna con millones de seguidores en todo el mundo.</p>
+                    <p class="artist-description">${artist.name} • ${artist.followers.total.toLocaleString()} seguidores</p>
                 </div>
                 <div class="artist-stats">
-                    <div class="followers-percent">20%</div>
+                    <div class="followers-percent">${Math.floor(Math.random() * 30) + 20}%</div>
                     <div class="followers-label">FOLLOWERS</div>
                 </div>
             </div>
@@ -133,13 +133,13 @@ document.addEventListener("DOMContentLoaded", async () => {
             albumElement.addEventListener("click", async (e) => {
                 const albumId = e.currentTarget.dataset.albumId;
                 const tracks = await getTracks(albumId);
-                showTracks(tracks, albumId);
+                showAlbumTracks(tracks, albumId);
             });
         });
     }
 
-    // Mostrar lista de canciones
-    async function showTracks(tracks, albumId) {
+    // Mostrar álbum y canciones
+    async function showAlbumTracks(tracks, albumId) {
         const albumResponse = await fetch(`https://api.spotify.com/v1/albums/${albumId}`, {
             headers: { "Authorization": `Bearer ${token}` }
         });
@@ -149,20 +149,28 @@ document.addEventListener("DOMContentLoaded", async () => {
         elements.tracksSection.classList.remove("hidden");
         
         elements.tracksSection.innerHTML = `
-            <div class="track-list">
-                <div class="album-header">
+            <div class="album-tracks-container">
+                <div class="album-artwork-section">
+                    <img src="${album.images[0].url}" class="album-artwork-large">
                     <h2>${album.name}</h2>
-                    <p>${album.artists[0].name} • ${album.release_date.split('-')[0]}</p>
+                    <p class="album-artist">${album.artists[0].name}</p>
+                    <p class="album-year">${album.release_date.split('-')[0]}</p>
                 </div>
-                ${tracks.map((track, index) => `
-                    <div class="track-item">
-                        <span class="track-number">${index + 1}</span>
-                        <div class="track-info">
-                            <span class="track-name">${track.name}</span>
-                        </div>
-                        <span class="track-duration">${msToTime(track.duration_ms)}</span>
+                
+                <div class="track-list-section">
+                    <div class="track-list">
+                        ${tracks.map((track, index) => `
+                            <div class="track-item">
+                                <span class="track-number">${index + 1}</span>
+                                <div class="track-info">
+                                    <span class="track-name">${track.name}</span>
+                                    <span class="track-artist">${track.artists[0].name}</span>
+                                </div>
+                                <span class="track-duration">${msToTime(track.duration_ms)}</span>
+                            </div>
+                        `).join('')}
                     </div>
-                `).join('')}
+                </div>
             </div>
         `;
     }
@@ -182,7 +190,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         if (results.artists.length > 0) {
             showArtistDetail(results.artists[0]);
         } else if (results.albums.length > 0) {
-            showTracks(await getTracks(results.albums[0].id), results.albums[0].id);
+            showAlbumTracks(await getTracks(results.albums[0].id), results.albums[0].id);
         } else {
             alert("No se encontraron resultados válidos");
         }
