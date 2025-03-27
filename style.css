@@ -1,4 +1,11 @@
-/* Estilos base */
+:root {
+    --night: #090c08ff;
+    --rose-red: #b9314fff;
+    --desert-sand: #f7d4bcff;
+    --lavender-floral: #c287e8ff;
+    --myrtle-green: #297373ff;
+}
+
 * {
     box-sizing: border-box;
     margin: 0;
@@ -7,14 +14,13 @@
 
 body {
     font-family: 'Montserrat', Arial, sans-serif;
-    background: #121212;
-    color: #ffffff;
+    background: var(--night);
+    color: var(--desert-sand);
     min-height: 100vh;
 }
 
-/* Header */
 header {
-    background: linear-gradient(135deg, #1DB954 0%, #18a748 100%);
+    background: linear-gradient(135deg, var(--myrtle-green) 0%, #1a4f4f 100%);
     padding: 2rem 1.5rem;
     box-shadow: 0 4px 12px rgba(0,0,0,0.3);
 }
@@ -33,26 +39,24 @@ input {
     border-radius: 30px;
     font-size: 16px;
     background: rgba(0,0,0,0.2);
-    color: white;
+    color: var(--desert-sand);
 }
 
 button {
     padding: 12px 32px;
     border: none;
     border-radius: 30px;
-    background: #000000;
-    color: white;
+    background: var(--rose-red);
+    color: var(--desert-sand);
     font-weight: 600;
     cursor: pointer;
     transition: all 0.3s ease;
 }
 
 button:hover {
-    background: #1a1a1a;
-    transform: scale(1.05);
+    background: var(--lavender-floral);
 }
 
-/* Vista de lista de artistas */
 .grid-view {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
@@ -61,7 +65,8 @@ button:hover {
 }
 
 .artist-card {
-    background: #282828;
+    background: rgba(40, 40, 40, 0.8);
+    border: 1px solid var(--myrtle-green);
     border-radius: 12px;
     padding: 1.5rem;
     transition: all 0.3s ease;
@@ -70,8 +75,8 @@ button:hover {
 }
 
 .artist-card:hover {
-    background: #383838;
     transform: translateY(-5px);
+    background: rgba(60, 60, 60, 0.8);
 }
 
 .artist-card img {
@@ -80,9 +85,9 @@ button:hover {
     border-radius: 50%;
     margin-bottom: 1rem;
     object-fit: cover;
+    border: 2px solid var(--lavender-floral);
 }
 
-/* Vista detalle de artista */
 #artist-detail {
     padding: 2rem;
 }
@@ -93,7 +98,7 @@ button:hover {
     align-items: center;
     margin-bottom: 3rem;
     padding: 2rem;
-    background: linear-gradient(to bottom, #2d2d2d, #121212);
+    background: rgba(40, 40, 40, 0.8);
     border-radius: 12px;
 }
 
@@ -108,27 +113,13 @@ button:hover {
 
 .artist-name {
     font-size: 3.5rem;
-    letter-spacing: -1px;
+    color: var(--desert-sand);
     margin-bottom: 1rem;
 }
 
 .followers-percent {
     font-size: 3rem;
-    color: #1DB954;
-    margin-bottom: 0.5rem;
-}
-
-.followers-label {
-    color: #b3b3b3;
-    font-size: 1.1rem;
-}
-
-.artist-description {
-    color: #b3b3b3;
-    font-size: 1.1rem;
-    line-height: 1.6;
-    max-width: 600px;
-    margin-bottom: 2rem;
+    color: var(--lavender-floral);
 }
 
 .album-list {
@@ -142,33 +133,46 @@ button:hover {
     justify-content: space-between;
     align-items: center;
     padding: 1.5rem;
-    background: #282828;
+    background: rgba(40, 40, 40, 0.8);
+    border: 1px solid var(--myrtle-green);
     border-radius: 8px;
     transition: all 0.3s ease;
 }
 
 .album-item:hover {
-    background: #383838;
     transform: translateX(10px);
+    background: rgba(60, 60, 60, 0.8);
 }
 
-.album-meta {
+.album-tracks-container {
     display: flex;
-    gap: 1rem;
-    align-items: center;
+    gap: 3rem;
+    padding: 2rem;
 }
 
-.album-year {
-    color: #b3b3b3;
-    font-size: 0.9rem;
+.album-artwork-section {
+    flex: 0 0 300px;
+    position: sticky;
+    top: 2rem;
+    height: fit-content;
+    text-align: center;
 }
 
-/* Lista de canciones */
+.album-artwork-large {
+    width: 100%;
+    border-radius: 15px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+    margin-bottom: 1rem;
+}
+
+.track-list-section {
+    flex: 1;
+}
+
 .track-list {
-    background: #181818;
+    background: rgba(30, 30, 30, 0.8);
     border-radius: 12px;
     padding: 1.5rem;
-    margin-top: 2rem;
 }
 
 .track-item {
@@ -180,13 +184,13 @@ button:hover {
 }
 
 .track-item:hover {
-    background: #282828;
+    background: rgba(50, 50, 50, 0.8);
 }
 
 .track-number {
     width: 40px;
     text-align: center;
-    color: #b3b3b3;
+    color: var(--myrtle-green);
 }
 
 .track-info {
@@ -196,26 +200,23 @@ button:hover {
 
 .track-name {
     font-size: 1.1rem;
+    color: var(--desert-sand);
 }
 
 .track-duration {
-    color: #b3b3b3;
+    color: var(--myrtle-green);
     margin-left: auto;
 }
 
-/* Botón de regreso */
 .back-button {
     position: fixed;
     bottom: 2rem;
     left: 2rem;
     padding: 12px 24px;
-    background: rgba(0,0,0,0.7);
+    background: var(--rose-red);
     backdrop-filter: blur(10px);
 }
 
-.hidden {
-    display: none;
-}
 .hidden {
     display: none;
 }
