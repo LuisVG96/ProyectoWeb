@@ -1,7 +1,6 @@
 document.addEventListener("DOMContentLoaded", async () => {
     const elements = {
         artistList: document.getElementById("artist-list"),
-        artistProfile: document.getElementById("artist-profile"),
         albumDetail: document.getElementById("album-detail"),
         tracksSection: document.getElementById("tracks"),
         backBtn: document.getElementById("back-btn"),
@@ -44,6 +43,34 @@ document.addEventListener("DOMContentLoaded", async () => {
                 allowedArtists.includes(album.artists[0].name.toLowerCase())
             )
         };
+    }
+
+    // Obtener artista por nombre
+    async function getArtist(artistName) {
+        const response = await fetch(
+            `https://api.spotify.com/v1/search?q=${encodeURIComponent(artistName)}&type=artist`,
+            { headers: { Authorization: `Bearer ${token}` } }
+        );
+        const data = await response.json();
+        return data.artists.items[0];
+    }
+
+    // Obtener álbumes de artista
+    async function getAlbums(artistId) {
+        const response = await fetch(`https://api.spotify.com/v1/artists/${artistId}/albums`, {
+            headers: { "Authorization": `Bearer ${token}` }
+        });
+        const data = await response.json();
+        return data.items;
+    }
+
+    // Obtener canciones de álbum
+    async function getTracks(albumId) {
+        const response = await fetch(`https://api.spotify.com/v1/albums/${albumId}/tracks`, {
+            headers: { "Authorization": `Bearer ${token}` }
+        });
+        const data = await response.json();
+        return data.items;
     }
 
     // Cargar artistas iniciales
@@ -121,6 +148,16 @@ document.addEventListener("DOMContentLoaded", async () => {
         return div;
     }
 
+    function createAlbumCard(album) {
+        return `
+            <div class="album-card">
+                <img src="${album.images[0]?.url || 'placeholder.jpg'}">
+                <h3>${album.name}</h3>
+                <p>${album.artists[0].name}</p>
+            </div>
+        `;
+    }
+
     function msToTime(ms) {
         const minutes = Math.floor(ms / 60000);
         const seconds = ((ms % 60000) / 1000).toFixed(0);
@@ -154,5 +191,5 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     // Inicialización
     await getToken();
-    displayArtists();
+    loadInitialArtists();
 });
