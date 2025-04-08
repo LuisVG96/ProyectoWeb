@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Music Mobile App</title>
+    <title>Music App - Nueva Paleta</title>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
@@ -19,22 +19,26 @@
 
         <!-- Secciones -->
         <section id="home" class="section active">
+            <div class="new-releases">
+                <h2 class="section-title"><span class="material-icons">new_releases</span> Lanzamientos Recientes</h2>
+                <div id="latest-albums" class="album-grid"></div>
+            </div>
+            <div class="recommendations">
+                <h2 class="section-title"><span class="material-icons">recommend</span> Recomendaciones</h2>
+                <div id="featured-tracks" class="track-list"></div>
+            </div>
+        </section>
+
+        <section id="search" class="section hidden">
             <div class="search-container">
                 <input type="text" id="search-input" placeholder="Buscar artista/álbum..." autocomplete="off">
-                <button id="search-btn">
-                    <span class="material-icons">search</span>
-                </button>
+                <div id="search-results" class="search-results"></div>
             </div>
+        </section>
+
+        <section id="library" class="section hidden">
             <div id="artist-list" class="artist-grid"></div>
-        </section>
-
-        <section id="artist-detail" class="section hidden">
-            <div id="artist-info" class="artist-header"></div>
-            <div id="album-list" class="album-list"></div>
-        </section>
-
-        <section id="tracks" class="section hidden">
-            <div id="album-tracks-container" class="album-tracks-container"></div>
+            <div id="album-list" class="hidden"></div>
         </section>
 
         <!-- Navegación inferior -->
@@ -43,7 +47,11 @@
                 <span class="material-icons">home</span>
                 <span>Inicio</span>
             </button>
-            <button class="nav-btn" id="library-btn">
+            <button class="nav-btn" data-section="search">
+                <span class="material-icons">search</span>
+                <span>Buscar</span>
+            </button>
+            <button class="nav-btn" data-section="library">
                 <span class="material-icons">library_music</span>
                 <span>Biblioteca</span>
             </button>
