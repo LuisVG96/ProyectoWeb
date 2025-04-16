@@ -2,61 +2,25 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Music App - Nueva Paleta</title>
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Music App - Diseño Premium</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="mobile-container">
-        <!-- Header -->
-        <header class="app-header">
-            <h1 id="current-section">Inicio</h1>
-            <button id="back-btn" class="hidden">
-                <span class="material-icons">arrow_back</span>
-            </button>
-        </header>
-
-        <!-- Secciones -->
-        <section id="home" class="section active">
-            <div class="new-releases">
-                <h2 class="section-title"><span class="material-icons">new_releases</span> Lanzamientos Recientes</h2>
-                <div id="latest-albums" class="album-grid"></div>
-            </div>
-            <div class="recommendations">
-                <h2 class="section-title"><span class="material-icons">recommend</span> Recomendaciones</h2>
-                <div id="featured-tracks" class="track-list"></div>
-            </div>
-        </section>
-
-        <section id="search" class="section hidden">
-            <div class="search-container">
-                <input type="text" id="search-input" placeholder="Buscar artista/álbum..." autocomplete="off">
-                <div id="search-results" class="search-results"></div>
-            </div>
-        </section>
-
-        <section id="library" class="section hidden">
-            <div id="artist-list" class="artist-grid"></div>
-            <div id="album-list" class="hidden"></div>
-        </section>
-
-        <!-- Navegación inferior -->
-        <nav class="bottom-nav">
-            <button class="nav-btn active" data-section="home">
-                <span class="material-icons">home</span>
-                <span>Inicio</span>
-            </button>
-            <button class="nav-btn" data-section="search">
-                <span class="material-icons">search</span>
-                <span>Buscar</span>
-            </button>
-            <button class="nav-btn" data-section="library">
-                <span class="material-icons">library_music</span>
-                <span>Biblioteca</span>
-            </button>
-        </nav>
-    </div>
+    <header>
+        <h1>Explora Música</h1>
+        <div class="search-container">
+            <input type="text" id="search" placeholder="Buscar artista o álbum...">
+            <button id="search-btn">Buscar</button>
+        </div>
+    </header>
+    
+    <main>
+        <section id="artist-list" class="grid-view"></section>
+        <section id="artist-detail" class="hidden"></section>
+        <section id="tracks" class="hidden"></section>
+        <button id="back-btn" class="hidden back-button">← Volver</button>
+    </main>
 
     <script src="script.js"></script>
 </body>
