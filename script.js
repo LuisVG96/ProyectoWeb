@@ -27,22 +27,39 @@ document.addEventListener("DOMContentLoaded", async () => {
         token = data.access_token;
     }
 
-    // Búsqueda
+    // Búsqueda mejorada (artistas, álbumes y canciones)
     async function search(query) {
-        const response = await fetch(
-            `https://api.spotify.com/v1/search?q=${encodeURIComponent(query)}&type=artist,album`,
-            { headers: { Authorization: `Bearer ${token}` } }
-        );
-        const data = await response.json();
-        
-        return {
-            artists: data.artists.items.filter(artist => 
+        try {
+            const response = await fetch(
+                `https://api.spotify.com/v1/search?q=${encodeURIComponent(query)}&type=artist,album,track`,
+                { headers: { Authorization: `Bearer ${token}` } }
+            );
+            const data = await response.json();
+            
+            // Filtrar resultados solo para artistas permitidos
+            const filteredArtists = data.artists?.items.filter(artist => 
                 allowedArtists.includes(artist.name.toLowerCase())
-            ),
-            albums: data.albums.items.filter(album =>
+            ) || [];
+            
+            const filteredAlbums = data.albums?.items.filter(album =>
+                album.artists && album.artists.length > 0 && 
                 allowedArtists.includes(album.artists[0].name.toLowerCase())
-            )
-        };
+            ) || [];
+            
+            const filteredTracks = data.tracks?.items.filter(track =>
+                track.artists && track.artists.length > 0 &&
+                allowedArtists.includes(track.artists[0].name.toLowerCase())
+            ) || [];
+            
+            return {
+                artists: filteredArtists,
+                albums: filteredAlbums,
+                tracks: filteredTracks
+            };
+        } catch (error) {
+            console.error("Error en la búsqueda:", error);
+            return { artists: [], albums: [], tracks: [] };
+        }
     }
 
     // Obtener artista
@@ -52,7 +69,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             { headers: { Authorization: `Bearer ${token}` } }
         );
         const data = await response.json();
-        return data.artists.items[0];
+        return data.artists?.items[0];
     }
 
     // Obtener álbumes
@@ -92,7 +109,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         const div = document.createElement("div");
         div.className = "artist-card";
         div.innerHTML = `
-            <img src="${artist.images[0]?.url}">
+            <img src="${artist.images[0]?.url || 'https://via.placeholder.com/150'}">
             <h3>${artist.name}</h3>
         `;
         return div;
@@ -146,7 +163,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         elements.tracksSection.innerHTML = `
             <div class="album-tracks-container">
                 <div class="album-artwork-section">
-                    <img src="${album.images[0].url}" class="album-artwork-large">
+                    <img src="${album.images[0]?.url || 'https://via.placeholder.com/300'}" class="album-artwork-large">
                     <h2>${album.name}</h2>
                     <p class="album-artist">${album.artists[0].name}</p>
                     <p class="album-year">${album.release_date.split('-')[0]}</p>
@@ -170,6 +187,32 @@ document.addEventListener("DOMContentLoaded", async () => {
         `;
     }
 
+    // Mostrar resultados de búsqueda de canciones
+    function showTrackResults(tracks) {
+        elements.artistList.classList.add("hidden");
+        elements.artistDetail.classList.add("hidden");
+        elements.tracksSection.classList.remove("hidden");
+        elements.backBtn.classList.remove("hidden");
+        
+        elements.tracksSection.innerHTML = `
+            <div class="search-results-container">
+                <h2>Resultados de búsqueda para: "${elements.searchInput.value}"</h2>
+                <div class="track-list">
+                    ${tracks.map(track => `
+                        <div class="track-item">
+                            <div class="track-info">
+                                <span class="track-name">${track.name}</span>
+                                <span class="track-artist">${track.artists.map(a => a.name).join(", ")}</span>
+                                <span class="track-album">Álbum: ${track.album.name}</span>
+                            </div>
+                            <span class="track-duration">${msToTime(track.duration_ms)}</span>
+                        </div>
+                    `).join('')}
+                </div>
+            </div>
+        `;
+    }
+
     // Convertir milisegundos a tiempo
     function msToTime(ms) {
         const minutes = Math.floor(ms / 60000);
@@ -177,8 +220,10 @@ document.addEventListener("DOMContentLoaded", async () => {
         return `${minutes}:${seconds.padStart(2, "0")}`;
     }
 
-    // Event listeners
-    elements.searchBtn.addEventListener("click", async () => {
+    // Función para ejecutar la búsqueda
+    async function executeSearch() {
+        if (!elements.searchInput.value.trim()) return;
+        
         if (!token) await getToken();
         const results = await search(elements.searchInput.value);
         
@@ -186,8 +231,20 @@ document.addEventListener("DOMContentLoaded", async () => {
             showArtistDetail(results.artists[0]);
         } else if (results.albums.length > 0) {
             showAlbumTracks(await getTracks(results.albums[0].id), results.albums[0].id);
+        } else if (results.tracks.length > 0) {
+            showTrackResults(results.tracks);
         } else {
             alert("No se encontraron resultados válidos");
+        }
+    }
+
+    // Event listeners
+    elements.searchBtn.addEventListener("click", executeSearch);
+    
+    // Evento para tecla Enter
+    elements.searchInput.addEventListener("keypress", (e) => {
+        if (e.key === "Enter") {
+            executeSearch();
         }
     });
 
