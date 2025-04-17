@@ -1,9 +1,11 @@
 :root {
-    --night: #090c08ff;
-    --rose-red: #b9314fff;
-    --desert-sand: #f7d4bcff;
-    --lavender-floral: #c287e8ff;
-    --myrtle-green: #297373ff;
+    --lapis-lazuli: #22577aff;
+    --verdigris: #38a3a5ff;
+    --emerald: #57cc99ff; 
+    --light-green: #80ed99ff;
+    --dark-bg: #0a1929;
+    --light-text: #f8f9fa;
+    --hover-bg: rgba(255, 255, 255, 0.1);
 }
 
 * {
@@ -14,13 +16,13 @@
 
 body {
     font-family: 'Montserrat', Arial, sans-serif;
-    background: var(--night);
-    color: var(--desert-sand);
+    background: var(--dark-bg);
+    color: var(--light-text);
     min-height: 100vh;
 }
 
 header {
-    background: linear-gradient(135deg, var(--myrtle-green) 0%, #1a4f4f 100%);
+    background: linear-gradient(135deg, var(--lapis-lazuli) 0%, var(--verdigris) 100%);
     padding: 2rem 1.5rem;
     box-shadow: 0 4px 12px rgba(0,0,0,0.3);
 }
@@ -38,23 +40,30 @@ input {
     border: none;
     border-radius: 30px;
     font-size: 16px;
-    background: rgba(0,0,0,0.2);
-    color: var(--desert-sand);
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--light-text);
+    backdrop-filter: blur(5px);
+}
+
+input:focus {
+    outline: 2px solid var(--light-green);
+    background: rgba(255, 255, 255, 0.2);
 }
 
 button {
     padding: 12px 32px;
     border: none;
     border-radius: 30px;
-    background: var(--rose-red);
-    color: var(--desert-sand);
+    background: var(--emerald);
+    color: var(--dark-bg);
     font-weight: 600;
     cursor: pointer;
     transition: all 0.3s ease;
 }
 
 button:hover {
-    background: var(--lavender-floral);
+    background: var(--light-green);
+    transform: translateY(-2px);
 }
 
 .grid-view {
@@ -65,18 +74,20 @@ button:hover {
 }
 
 .artist-card {
-    background: rgba(40, 40, 40, 0.8);
-    border: 1px solid var(--myrtle-green);
+    background: rgba(34, 87, 122, 0.2);
+    border: 1px solid var(--verdigris);
     border-radius: 12px;
     padding: 1.5rem;
     transition: all 0.3s ease;
     cursor: pointer;
     text-align: center;
+    backdrop-filter: blur(5px);
 }
 
 .artist-card:hover {
     transform: translateY(-5px);
-    background: rgba(60, 60, 60, 0.8);
+    background: rgba(56, 163, 165, 0.3);
+    box-shadow: 0 8px 16px rgba(0,0,0,0.2);
 }
 
 .artist-card img {
@@ -85,7 +96,7 @@ button:hover {
     border-radius: 50%;
     margin-bottom: 1rem;
     object-fit: cover;
-    border: 2px solid var(--lavender-floral);
+    border: 2px solid var(--light-green);
 }
 
 #artist-detail {
@@ -98,8 +109,10 @@ button:hover {
     align-items: center;
     margin-bottom: 3rem;
     padding: 2rem;
-    background: rgba(40, 40, 40, 0.8);
+    background: rgba(34, 87, 122, 0.3);
     border-radius: 12px;
+    backdrop-filter: blur(5px);
+    border: 1px solid var(--verdigris);
 }
 
 .artist-info {
@@ -113,13 +126,13 @@ button:hover {
 
 .artist-name {
     font-size: 3.5rem;
-    color: var(--desert-sand);
+    color: var(--light-green);
     margin-bottom: 1rem;
 }
 
 .followers-percent {
     font-size: 3rem;
-    color: var(--lavender-floral);
+    color: var(--emerald);
 }
 
 .album-list {
@@ -133,15 +146,16 @@ button:hover {
     justify-content: space-between;
     align-items: center;
     padding: 1.5rem;
-    background: rgba(40, 40, 40, 0.8);
-    border: 1px solid var(--myrtle-green);
+    background: rgba(34, 87, 122, 0.2);
+    border: 1px solid var(--verdigris);
     border-radius: 8px;
     transition: all 0.3s ease;
+    backdrop-filter: blur(5px);
 }
 
 .album-item:hover {
     transform: translateX(10px);
-    background: rgba(60, 60, 60, 0.8);
+    background: rgba(56, 163, 165, 0.3);
 }
 
 .album-tracks-container {
@@ -163,6 +177,7 @@ button:hover {
     border-radius: 15px;
     box-shadow: 0 8px 24px rgba(0,0,0,0.5);
     margin-bottom: 1rem;
+    border: 2px solid var(--light-green);
 }
 
 .track-list-section {
@@ -170,9 +185,11 @@ button:hover {
 }
 
 .track-list {
-    background: rgba(30, 30, 30, 0.8);
+    background: rgba(34, 87, 122, 0.2);
     border-radius: 12px;
     padding: 1.5rem;
+    backdrop-filter: blur(5px);
+    border: 1px solid var(--verdigris);
 }
 
 .track-item {
@@ -184,13 +201,13 @@ button:hover {
 }
 
 .track-item:hover {
-    background: rgba(50, 50, 50, 0.8);
+    background: rgba(56, 163, 165, 0.3);
 }
 
 .track-number {
     width: 40px;
     text-align: center;
-    color: var(--myrtle-green);
+    color: var(--emerald);
 }
 
 .track-info {
@@ -200,12 +217,20 @@ button:hover {
 
 .track-name {
     font-size: 1.1rem;
-    color: var(--desert-sand);
+    color: var(--light-text);
+    font-weight: 500;
+}
+
+.track-artist, .track-album {
+    font-size: 0.9rem;
+    color: var(--light-green);
+    opacity: 0.8;
 }
 
 .track-duration {
-    color: var(--myrtle-green);
+    color: var(--emerald);
     margin-left: auto;
+    font-weight: 500;
 }
 
 .back-button {
@@ -213,10 +238,36 @@ button:hover {
     bottom: 2rem;
     left: 2rem;
     padding: 12px 24px;
-    background: var(--rose-red);
-    backdrop-filter: blur(10px);
+    background: var(--emerald);
+    color: var(--dark-bg);
+    border-radius: 30px;
+    font-weight: 600;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    transition: all 0.3s ease;
+}
+
+.back-button:hover {
+    background: var(--light-green);
+    transform: translateY(-2px);
 }
 
 .hidden {
     display: none;
+}
+
+/* Estilos adicionales para los resultados de búsqueda de canciones */
+.search-results-container {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.search-results-container h2 {
+    color: var(--light-green);
+    margin-bottom: 2rem;
+    font-size: 1.8rem;
+}
+
+/* Efectos de transición suaves */
+.transition-all {
+    transition: all 0.3s ease;
 }
