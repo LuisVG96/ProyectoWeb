@@ -1,27 +1,142 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Music App - Diseño Premium</title>
+    <title>Reproductor de Música</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <header>
-        <h1>Explora Música</h1>
-        <div class="search-container">
-            <input type="text" id="search" placeholder="Buscar artista o álbum...">
-            <button id="search-btn">Buscar</button>
+    <!-- Main Container -->
+    <div class="container">
+        <!-- Status Bar -->
+        <div class="status-bar">
+            <div class="time">9:41</div>
+            <div class="icons">
+                <span>●●●</span>
+                <span>📶</span>
+                <span>🔋</span>
+            </div>
         </div>
-    </header>
+        
+        <!-- Header -->
+        <header>
+            <h1>Music</h1>
+            <div class="header-icons">
+                <button id="back-btn" class="hidden">◀️</button>
+                <span>⚙️</span>
+            </div>
+            <div class="search-container">
+                <input type="text" id="search" placeholder="Buscar artistas, álbumes o canciones">
+                <button id="search-btn">Buscar</button>
+            </div>
+        </header>
+        
+        <!-- Main content section -->
+        <main>
+            <!-- Home View (Visible by default) -->
+            <div class="home-view">
+                <!-- Featured Album -->
+                <div class="feature-album">
+                    <div class="album-info">
+                        <div class="album-title">Neue Machina ⭐</div>
+                        <div class="progress">
+                            <div class="progress-bar"></div>
+                        </div>
+                    </div>
+                    <img src="https://via.placeholder.com/150/090909" alt="Album Cover">
+                </div>
+                
+                <!-- Shortcuts -->
+                <div class="shortcuts">
+                    <div class="shortcut">
+                        <div class="icon">🎵</div>
+                        <div class="label">Daily push</div>
+                    </div>
+                    <div class="shortcut">
+                        <div class="icon">📊</div>
+                        <div class="label">Top</div>
+                    </div>
+                    <div class="shortcut">
+                        <div class="icon">📁</div>
+                        <div class="label">Playlist</div>
+                    </div>
+                    <div class="shortcut">
+                        <div class="icon">📻</div>
+                        <div class="label">Radio</div>
+                    </div>
+                </div>
+                
+                <!-- Artists List Section -->
+                <div class="section-header">
+                    <h2>Artists</h2>
+                </div>
+                
+                <section id="artist-list" class="artist-grid">
+                    <!-- Artist cards will be loaded here by JavaScript -->
+                </section>
+                
+                <!-- Popular Albums -->
+                <div class="section-header">
+                    <h2>Popular Albums</h2>
+                    <div class="view-all">View all</div>
+                </div>
+                
+                <div class="popular-albums">
+                    <div class="album-row">
+                        <div class="album-cover" style="background-color: #ff5252;"></div>
+                        <div class="album-info">
+                            <div class="album-name">Beautiful People – Ed Sheeran</div>
+                        </div>
+                    </div>
+                    <div class="album-row">
+                        <div class="album-cover" style="background-color: #999;"></div>
+                        <div class="album-info">
+                            <div class="album-name">Talk – Khalid</div>
+                        </div>
+                    </div>
+                    <div class="album-row">
+                        <div class="album-cover" style="background-color: #333;"></div>
+                        <div class="album-info">
+                            <div class="album-name">No Guidance – Chris Brown</div>
+                        </div>
+                        <div class="play-button">▶️</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Artist Detail View (Hidden by default) -->
+            <section id="artist-detail" class="hidden">
+                <!-- Artist details will be loaded here by JavaScript -->
+            </section>
+            
+            <!-- Tracks View (Hidden by default) -->
+            <section id="tracks" class="hidden">
+                <!-- Track details will be loaded here by JavaScript -->
+            </section>
+        </main>
+        
+        <!-- Navigation Bar -->
+        <div class="nav-bar">
+            <div class="nav-item active">
+                <div class="nav-icon">🏠</div>
+                <div class="nav-label">Home</div>
+            </div>
+            <div class="nav-item">
+                <div class="nav-icon">🔍</div>
+                <div class="nav-label">Discover</div>
+            </div>
+            <div class="nav-item">
+                <div class="nav-icon">📝</div>
+                <div class="nav-label">Library</div>
+            </div>
+            <div class="nav-item">
+                <div class="nav-icon">👤</div>
+                <div class="nav-label">Profile</div>
+            </div>
+        </div>
+    </div>
     
-    <main>
-        <section id="artist-list" class="grid-view"></section>
-        <section id="artist-detail" class="hidden"></section>
-        <section id="tracks" class="hidden"></section>
-        <button id="back-btn" class="hidden back-button">← Volver</button>
-    </main>
-
     <script src="script.js"></script>
 </body>
 </html>
